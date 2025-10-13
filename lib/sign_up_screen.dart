@@ -1,6 +1,8 @@
+import 'package:authentication/todo_screen.dart';
 import 'package:authentication/widgets/custom_button.dart';
 import 'package:authentication/widgets/custom_text_field.dart';
 import 'package:authentication/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -48,7 +50,7 @@ class SignUpScreen extends StatelessWidget {
                         controller: fullNameController,
                         icon: Icons.person_outline_outlined,
                         hintText: "Full Name",
-                        validator: (String) {
+                        validator: (String? String) {
                           if (String!.length < 5) {
                             return "Full Name cant't be shorter than 5 characters";
                           }
@@ -95,8 +97,21 @@ class SignUpScreen extends StatelessWidget {
               ),
               CustomButton(
                 label: "Sign Up",
-                onPressed: () {
-                  formKey.currentState!.validate();
+                onPressed: () async {
+                  final isValid = formKey.currentState!.validate();
+                  if (isValid) {
+                    final user = await FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
+                    await user.user!.updateDisplayName(fullNameController.text);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => TodoScreen()),
+                      (route) => false,
+                    );
+                  }
                 },
               ),
               Row(

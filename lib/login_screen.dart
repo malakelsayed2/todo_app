@@ -1,11 +1,12 @@
+import 'package:authentication/todo_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'sign_up_screen.dart';
 import 'widgets/custom_button.dart';
 import 'widgets/custom_text_field.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({super.key});
   final formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -81,8 +82,34 @@ class LoginScreen extends StatelessWidget {
               Spacer(flex: 3),
               CustomButton(
                 label: "Sign In",
-                onPressed: () {
-                  formKey.currentState!.validate();
+                onPressed: () async {
+                  final isValid = formKey.currentState!.validate();
+                  if (isValid) {
+                    try {
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => TodoScreen()),
+                        (route) => false,
+                      );
+                    } on FirebaseAuthException catch (e) {
+                      switch (e.code) {
+                        case 'invalid-credential':
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Invalid credentail, Try to login again",
+                              ),
+                            ),
+                          );
+                      }
+                    } catch (e) {
+                      print("Error: ${e.toString()}");
+                    }
+                  }
                 },
               ),
               Spacer(flex: 1),
@@ -98,7 +125,7 @@ class LoginScreen extends StatelessWidget {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => SignUpScreen()),
-                            (route) => false,
+                        (route) => false,
                       );
                     },
                     child: Text(

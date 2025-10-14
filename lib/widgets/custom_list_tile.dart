@@ -1,4 +1,6 @@
 import 'package:authentication/models/task_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -31,8 +33,9 @@ class _CustomListTileState extends State<CustomListTile> {
       ),
       child: ListTile(
         leading: GestureDetector(
-          onTap: () {
+          onTap: () async {
             widget.model.isCompleted = !widget.model.isCompleted;
+            await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection("tasks").doc(widget.model.id).update({"isCompleted" :widget.model.isCompleted});
             setState(() {});
           },
           child: widget.model.isCompleted

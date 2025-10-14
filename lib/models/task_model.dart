@@ -3,14 +3,14 @@ class TaskModel {
 
   final String description;
 
-  final bool isChecked;
+  bool isCompleted;
 
-  final String taskId;
+  final String id;
 
   TaskModel({
     required this.title,
     required this.description,
-    required this.isChecked,
-    required this.taskId,
+    required this.isCompleted,
+    required this.id,
   });
 }

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'login_screen.dart';
+import 'models/task_model.dart';
 
 class TodoScreen extends StatefulWidget {
   const TodoScreen({super.key});
@@ -14,6 +15,27 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
+  List<TaskModel> tasks = [
+    TaskModel(
+      id: "123",
+      title: "Task 1",
+      description: "description 1",
+      isCompleted: false,
+    ),
+    TaskModel(
+        id: "123",
+        title: "Task 2",
+        description: "description 1",
+        isCompleted: false
+    ),
+    TaskModel(
+        id: "123",
+        title: "Task 3",
+        description: "description 1",
+        isCompleted: false
+    ),
+  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +96,14 @@ class _TodoScreenState extends State<TodoScreen> {
                       hintText: 'Task description',
                     ),
                     SizedBox(height: 20,),
-                    CustomButton(label: "Add Task", onPressed: () {}),
+                    CustomButton(label: "Add Task", onPressed: () {
+                      final task = TaskModel(title: titleController.text, description: descriptionController.text, isCompleted: false, id: UniqueKey().toString());
+                      tasks.add(task);
+                      setState(() {
+
+                      });
+                      Navigator.pop(context) ;
+                    }),
                   ],
                 ),
               );
@@ -87,9 +116,9 @@ class _TodoScreenState extends State<TodoScreen> {
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: ListView.separated(
-          itemBuilder: (context, index) => CustomListTile(),
+          itemBuilder: (context, index) => CustomListTile(model:tasks[index],),
           separatorBuilder: (context, index) => Container(height: 20),
-          itemCount: 4,
+          itemCount: tasks.length,
         ),
       ),
     );

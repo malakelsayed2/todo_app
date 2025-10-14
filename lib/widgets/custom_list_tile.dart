@@ -1,9 +1,11 @@
+import 'package:authentication/models/task_model.dart';
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatefulWidget {
-  CustomListTile({super.key});
+ CustomListTile({super.key, required this.model});
 
-  bool isChecked = false;
+  TaskModel model ;
+
 
   @override
   State<CustomListTile> createState() => _CustomListTileState();
@@ -28,10 +30,10 @@ class _CustomListTileState extends State<CustomListTile> {
       child: ListTile(
         leading: GestureDetector(
           onTap: () {
-            widget.isChecked = !widget.isChecked;
+            widget.model.isCompleted = !widget.model.isCompleted;
             setState(() {});
           },
-          child: widget.isChecked
+          child: widget.model.isCompleted
               ? Container(
                   width: 30,
                   height: 30,
@@ -52,17 +54,17 @@ class _CustomListTileState extends State<CustomListTile> {
                 ),
         ),
         title: Text(
-          "Read a book",
+          widget.model.title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            decoration: widget.isChecked ? TextDecoration.lineThrough : null,
+            decoration: widget.model.isCompleted ? TextDecoration.lineThrough : null,
           ),
         ),
         subtitle: Text(
-          "Rest and Recharge you batteries your mind will thank you for it!",
+          widget.model.description,
           style: TextStyle(
-            decoration: widget.isChecked ? TextDecoration.lineThrough : null,
+            decoration: widget.model.isCompleted ? TextDecoration.lineThrough : null,
           ),
         ),
         trailing: Icon(Icons.more_vert),

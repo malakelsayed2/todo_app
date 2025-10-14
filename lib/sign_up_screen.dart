@@ -2,6 +2,7 @@ import 'package:authentication/todo_screen.dart';
 import 'package:authentication/widgets/custom_button.dart';
 import 'package:authentication/widgets/custom_text_field.dart';
 import 'package:authentication/login_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -106,6 +107,15 @@ class SignUpScreen extends StatelessWidget {
                           password: passwordController.text,
                         );
                     await user.user!.updateDisplayName(fullNameController.text);
+                    //Create document in users collection
+
+                    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+                    await FirebaseFirestore.instance.collection("users").doc(uid).set({
+                      "email": emailController.text,
+                      "fullName": fullNameController.text
+                    });
+
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => TodoScreen()),

@@ -1,10 +1,12 @@
 import 'package:authentication/models/task_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatefulWidget {
- CustomListTile({super.key, required this.model});
+ CustomListTile({super.key, required this.model, required this.onRemove});
 
   TaskModel model ;
+  final VoidCallback onRemove ;
 
 
   @override
@@ -67,7 +69,7 @@ class _CustomListTileState extends State<CustomListTile> {
             decoration: widget.model.isCompleted ? TextDecoration.lineThrough : null,
           ),
         ),
-        trailing: Icon(Icons.more_vert),
+        trailing: IconButton(onPressed: widget.onRemove, icon: Icon(CupertinoIcons.xmark)),
       ),
     );
   }

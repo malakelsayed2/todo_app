@@ -4,7 +4,6 @@ import 'package:authentication/widgets/custom_text_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'login_screen.dart';
 import 'models/task_model.dart';
 
@@ -159,19 +158,30 @@ class _TodoScreenState extends State<TodoScreen> {
       )
           : Padding(
         padding: const EdgeInsets.all(15),
-        child: ListView.separated(
-          itemBuilder: (context, index){
-               final model = tasks[index] ;
-              return CustomListTile(
-                model: tasks[index],
-                onRemove: ()async{
-                  tasks.removeAt(index);
-                  await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection("tasks").doc(model.id).delete();
-                  setState(() {});
-                },
-              );},
-          separatorBuilder: (context, index) => Container(height: 20),
-          itemCount: tasks.length,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text("Hello, ${FirebaseAuth.instance.currentUser?.displayName ?? "user"} 👋" , style: TextStyle(fontWeight: FontWeight.bold , fontSize: 25),),
+            ),
+            Expanded(
+              child: ListView.separated(
+                itemBuilder: (context, index){
+                     final model = tasks[index] ;
+                    return CustomListTile(
+                      model: tasks[index],
+                      onRemove: ()async{
+                        tasks.removeAt(index);
+                        await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).collection("tasks").doc(model.id).delete();
+                        setState(() {});
+                      },
+                    );},
+                separatorBuilder: (context, index) => Container(height: 20),
+                itemCount: tasks.length,
+              ),
+            ),
+          ],
         ),
       ),
     );
